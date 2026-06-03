@@ -6,7 +6,8 @@ from tessuto import ScartoTessile
 
 st.set_page_config(
     page_title="DSS Riciclo Tessile", # Cambia anche il nome nella scheda del browser
-   layout="wide" # ALLARGA LA PAGINA
+    page_icon= "♻️",
+    layout="wide" # ALLARGA LA PAGINA
 )
 
 # Rimuove lo spazio vuoto ad inizio pagina
@@ -42,11 +43,12 @@ nazione_scelta = st.sidebar.selectbox("In quale nazione si trova il tuo lotto?",
 lat_partenza, lon_partenza = nazioni_origine[nazione_scelta]
 
 # NUOVA CHECKBOX NORMATIVA
+
 st.sidebar.markdown("### ⚖️ Compliance Normativa")
 is_green_list = st.sidebar.checkbox(
     "Il lotto appartiene alla 'Green List' UE?",
     value=True,
-    help="Se deselezionato, le normative doganali impongono il trattamento all'interno dei confini nazionali (End-of-Waste locale)."
+    help="Se deselezionato, le normative doganali impongono il trattamento all'interno dei confini nazionali (New Regulation on waste shipments)."
 )
 
 tipo_trasporto = st.sidebar.selectbox("Mezzo di Trasporto Logistico", ["Camion", "Treno", "Nave"])
@@ -66,34 +68,40 @@ destinazioni_finali = {
 destinazione_scelta = st.sidebar.selectbox("Destinazione Prodotto Finito (Brand):", list(destinazioni_finali.keys()))
 lat_arrivo, lon_arrivo = destinazioni_finali[destinazione_scelta]
 
-st.sidebar.divider()
+# st.sidebar.divider()
+st.sidebar.markdown(
+    "<hr style='margin-top: 10px; margin-bottom: 5px; border: 0; border-top: 1px solid rgba(255,255,255,0.2);'>"
+    "<h3 style='margin-top: 0px; padding-top: 0px;",
+    unsafe_allow_html=True
+)
 
 # --- PARAMETRI TESSUTO ---
 st.sidebar.header("Parametri Tessuto")
 
 presets = {
-    "Policotone (Cotone + Poliestere)": [65, 35, 0, 0, 0],
-    "TripleBlend (Cotone + Poliestere + Elastan)": [60, 35, 5, 0, 0], # Corretto: 5 valori
-    "Lana e Acrilico": [0, 0, 0, 50, 50],
-    "Nylon ed Elastane": [0, 0, 15, 0, 85],
-    "Altro (Manuale)": [20, 20, 20, 20, 20]
+    "Policotone (Cotone + Poliestere)": [65, 35, 0, 0, 0, 0],
+    "TripleBlend (Cotone + Poliestere + Elastan)": [60, 35, 5, 0, 0, 0], # Corretto: 5 valori
+    "Lana e Acrilico": [0, 0, 0, 50, 50, 0],
+    "Nylon ed Elastane": [0, 0, 15, 0, 0, 85],
+    "Altro (Manuale)": [20, 20, 10, 20, 15, 15]
 }
 
 nome_lotto = st.sidebar.selectbox("Seleziona il tipo di materiale", list(presets.keys()))
-val_c, val_p, val_e, val_l, val_n = presets[nome_lotto]
+val_c, val_p, val_e, val_l, val_a, val_n = presets[nome_lotto]
 
 c = st.sidebar.slider("Cotone %", 0, 100, val_c)
 p = st.sidebar.slider("Poliestere %", 0, 100, val_p)
 e = st.sidebar.slider("Elastan %", 0, 100, val_e)
 l = st.sidebar.slider("Lana %", 0, 100, val_l)
+a = st.sidebar.slider("Acrilico %", 0, 100, val_a)
 n = st.sidebar.slider("Nylon %", 0, 100, val_n)
 
-somma_totale = c + p + e + l + n
+somma_totale = c + p + e + l + a + n
 if somma_totale != 100:
     st.sidebar.warning(f"Attenzione: La somma è {somma_totale}% invece di 100%.")
 
 # --- LOGICA ---
-mio_scarto = ScartoTessile(nome_lotto, c, p, e, l, n)
+mio_scarto = ScartoTessile(nome_lotto, c, p, e, l, a, n)
 percorso, spiegazione = mio_scarto.calcola_riciclo()
 co2 = mio_scarto.kpi_ambientale()
 
@@ -179,8 +187,8 @@ with tab1:
     with col_grafico1:
 
         # 1. GRAFICO A TORTA (COMPOSIZIONE)
-        labels = ['Cotone', 'Poliestere', 'Elastan', 'Lana', 'Nylon']
-        values = [c, p, e, l, n]
+        labels = ['Cotone', 'Poliestere', 'Elastan', 'Lana', 'Acrilico', 'Nylon']
+        values = [c, p, e, l, a, n]
 
         # Filtriamo per nascondere i materiali allo 0% dal grafico
         labels_filtered = [label for label, value in zip(labels, values) if value > 0]
@@ -238,8 +246,10 @@ with tab1:
             margin=dict(t=40, b=10, l=40, r=40),
             height=360,
             paper_bgcolor='rgba(0,0,0,0)',
+            dragmode=False,
+
         )
-        st.plotly_chart(fig_radar, use_container_width=True)
+        st.plotly_chart(fig_radar, use_container_width=True, config={'displayModeBar': False})
 
 
 # ==========================================

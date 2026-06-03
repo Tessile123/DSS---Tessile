@@ -21,23 +21,29 @@ class ScartoTessile:
             return "🔴 Riciclo Meccanico", (
                 "I blend di Nylon ed Elastan (tipici dell'abbigliamento sportivo) sono estremamente difficili da separare chimicamente. "
                 "L'Elastan si comporta come un contaminante gommoso che degrada i solventi necessari per il Nylon. "
-                "Pertanto, l'unica via industriale scalabile è la triturazione meccanica per il downcycling (imbottiture, pannelli isolanti), "
-                "sacrificando la nobiltà del Nylon per poter gestire l'alta elasticità del tessuto.")
+                "Il riciclo meccanico è una tecnologia consolidata ma degrada la fibra: le sfilacciatrici spezzano "
+                "il tessuto in fibre corte che richiedono l’aggiunta di materiale vergine. È un processo a basso impatto "
+                "ambientale, ma porta inevitabilmente al downcycling e a prodotti di qualità inferiore come imbottiture"
+                " o isolanti. "
+            )
 
         # 2. Regola Assoluta: Nylon puro o senza elastan
         elif self.nylon > 0:
             return "🟢 Riciclo Chimico", (
-                "La chimica del riciclo permette di ottenere fibre identiche alle vergini grazie a processi "
-                "di depolimerizzazione o dissoluzione selettiva. Nel caso del Nylon puro (Poliammide), il riciclo chimico "
-                "è l'unico capace di rigenerare il monomero di base con qualità pari al vergine.")
+                "Il riciclo chimico permette di ottenere fibre identiche alle vergini grazie a processi di depolimerizzazione "
+                "o dissoluzione selettiva che superano i limiti del meccanico. È una tecnologia costosa ma altamente circolare: "
+                "recupera i solventi in ciclo chiuso, riduce drasticamente acqua e impatto ambientale e diventa più conveniente "
+                "man mano che aumentano i volumi di rifiuti trattati."
+            )
 
             # 3. Gestione Contaminanti (Elastan) per i Triple Blend e altre mischie
         elif self.elastan > 0:
             if self.elastan < 6:
                 return "🟢 Riciclo Chimico", (
-                    "La chimica del riciclo permette di ottenere fibre identiche alle vergini grazie a processi "
-                    "di depolimerizzazione o dissoluzione selettiva che superano i limiti della separazione meccanica. "
-                    "È una tecnologia costosa ma altamente circolare, capace di recuperare solventi in ciclo chiuso."
+                    "Il riciclo chimico permette di ottenere fibre identiche alle vergini grazie a processi di depolimerizzazione "
+                    "o dissoluzione selettiva che superano i limiti del meccanico. È una tecnologia costosa ma altamente circolare: "
+                    "recupera i solventi in ciclo chiuso, riduce drasticamente acqua e impatto ambientale e diventa più conveniente "
+                    "man mano che aumentano i volumi di rifiuti trattati."
                 )
             else:
                 return "🔵 Riciclo Enzimatico", (
@@ -56,28 +62,35 @@ class ScartoTessile:
             elif self.acrilico > self.lana:
                 return "🟢 Riciclo Chimico", (
                     "L'acrilico è maggioritario, accumula elettricità statica ed è inerte agli enzimi. "
-                    "Interveniamo per via chimica con prodotti antistatici e siliconici per conferire una mano 'wool-like', "
-                    "associando poi il termofissaggio meccanico per stabilizzare il capo grazie alla sua termoplasticità.")
+                    "Il riciclo chimico permette di ottenere fibre identiche alle vergini grazie a processi di depolimerizzazione "
+                    "o dissoluzione selettiva che superano i limiti del meccanico. È una tecnologia costosa ma altamente circolare: "
+                    "recupera i solventi in ciclo chiuso, riduce drasticamente acqua e impatto ambientale e diventa più conveniente "
+                    "man mano che aumentano i volumi di rifiuti trattati."
+                )
             else:
                 return "🔴 Riciclo Meccanico", (
-                    "Forze equilibrate: l'obiettivo è fondere le proprietà estetiche. Si procede con finissaggi "
-                    "meccanici (garzatura e cimatura) che estraggono il pelo da entrambe le fibre, creando una superficie "
-                    "omogenea che nasconde la sinteticità dell'acrilico e valorizza la termicità della lana.")
+                    "Il riciclo meccanico è una tecnologia consolidata ma degrada la fibra: le sfilacciatrici spezzano "
+                    "il tessuto in fibre corte che richiedono l’aggiunta di materiale vergine. È un processo a basso impatto "
+                    "ambientale, ma porta inevitabilmente al downcycling e a prodotti di qualità inferiore come imbottiture"
+                    " o isolanti."
+                    )
 
         # 5. Alta purezza Cellulosica: Riciclo Chimico per rigenerare Viscosa/Lyocell
         elif self.cotone > 60:
             return "🟢 Riciclo Chimico", (
-                "La chimica del riciclo permette di ottenere fibre identiche alle vergini grazie a processi "
-                "di depolimerizzazione o dissoluzione selettiva che superano i limiti della separazione meccanica. "
-                "È una tecnologia costosa ma altamente circolare, capace di recuperare solventi in ciclo chiuso."
+                "Il riciclo chimico permette di ottenere fibre identiche alle vergini grazie a processi di depolimerizzazione "
+                "o dissoluzione selettiva che superano i limiti del meccanico. È una tecnologia costosa ma altamente circolare: "
+                "recupera i solventi in ciclo chiuso, riduce drasticamente acqua e impatto ambientale e diventa più conveniente "
+                "man mano che aumentano i volumi di rifiuti trattati."
                 )
 
         # 6. Blend Complessi (Es. Cotone-Poliestere equilibrati): Biotecnologie
         else:
             return "🔵 Riciclo Enzimatico", (
-                "Utilizza biocatalizzatori capaci di digerire selettivamente una fibra del blend, permettendo la separazione "
-                "anche dei mix più complessi senza solventi tossici e con basse temperature. È la tecnologia più avanzata "
-                "e sostenibile, ma oggi limitata dai costi elevati degli enzimi, gestita soprattutto da startup.")
+                "Il riciclo enzimatico usa biocatalizzatori che digeriscono selettivamente una fibra del blend, permettendo la "
+                "separazione anche dei mix più complessi senza solventi tossici e con basse temperature. È la tecnologia più avanzata"
+                "e sostenibile, ma oggi limitata dai costi elevati degli enzimi, gestita soprattutto da startup. "
+                )
 
 
     # ======================================
@@ -183,7 +196,7 @@ class ScartoTessile:
         emissioni_trasporto = {
             "Treno": 0.02,  # Molto efficiente per lunghe distanze
             "Camion": 0.10,  # Standard su gomma
-            "Nave": 0.50  # Altamente inquinante, usato per urgenze
+            "Nave": 0.  #
         }
         fattore_trasporto = emissioni_trasporto.get(tipo_trasporto, 0.10)
 
