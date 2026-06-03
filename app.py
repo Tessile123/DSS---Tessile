@@ -164,8 +164,8 @@ lista_attori = mio_scarto.get_partner_specializzati(
 col_logo, col_titolo = st.columns([1, 7])
 
 # Inserimento logo
-#with col_logo:
-    #st.image("logo.jpg", width=120)
+with col_logo:
+    st.image("logo.jpg", width=120)
 
 # Inserimento Titolo
 with col_titolo:
@@ -468,8 +468,9 @@ with tab3:
             # ==========================================
         with st.expander("Istruzioni di Circolarità ed Esportazione"):
                 # 1. GENERAZIONE DEL LINK INTELLIGENTE PER IL PROF
-                base_url = "https://dss-tessile.streamlit.app/?embed=true"
 
+                base_url = "https://share.streamlit.io/tessile123/dss---tessile/main/app.py/?embed=true"
+                
                 query_string = (
                     f"&passaporto=true"
                     f"&lotto={urllib.parse.quote(nome_lotto)}"
