@@ -128,8 +128,8 @@ lista_attori = mio_scarto.get_partner_specializzati(
 col_logo, col_titolo = st.columns([1, 7])
 
 # Inserimento logo
-with col_logo:
-    st.image("logo.jpg", width=120)
+#with col_logo:
+    #st.image("logo.jpg", width=120)
 
 # Inserimento Titolo
 with col_titolo:
