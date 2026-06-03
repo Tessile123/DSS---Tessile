@@ -164,8 +164,8 @@ lista_attori = mio_scarto.get_partner_specializzati(
 col_logo, col_titolo = st.columns([1, 7])
 
 # Inserimento logo
-#with col_logo:
-    #st.image("logo.jpg", width=120)
+with col_logo:
+    st.image("logo.jpg", width=120)
 
 # Inserimento Titolo
 with col_titolo:
@@ -463,37 +463,34 @@ with tab3:
             st.markdown(f"**Risparmio Suolo:** {co2['suolo']}")
             st.markdown(f"**Affidabilità Dato (TRL):** {co2['affidabilità']} / 5")
 
-
-        # 4. CIRCOLARITÀ E QR CODE
-            # --- TAB 3: GRAFICA ORIGINALE CON QR INTELLIGENTE ---
+            # ==========================================
+            # 4. CIRCOLARITÀ E QR CODE
+            # ==========================================
         with st.expander("Istruzioni di Circolarità ed Esportazione"):
-                # Rimane l'expander originale esattamente come nel tuo screenshot
-                #with st.expander("Istruzioni di Circolarità ed Esportazione"):
-                    # 1. GENERAZIONE DEL LINK INTELLIGENTE PER IL PROF
+                # 1. GENERAZIONE DEL LINK INTELLIGENTE PER IL PROF
+                base_url = "https://dss-tessile.streamlit.app/?embed=true"
 
-            base_url = "https://dss-tessile.streamlit.app/"  # Il tuo URL ufficiale
+                query_string = (
+                    f"&passaporto=true"
+                    f"&lotto={urllib.parse.quote(nome_lotto)}"
+                    f"&c={c}&p={p}&e={e}&l={l}&a={a}&n={n}"
+                    f"&trattamento={urllib.parse.quote(percorso)}"
+                    f"&score={int(circolarita)}"
+                )
 
-            query_string = (
-                        f"?passaporto=true"
-                        f"&lotto={urllib.parse.quote(nome_lotto)}"
-                        f"&c={c}&p={p}&e={e}&l={l}&a={a}&n={n}"
-                        f"&trattamento={urllib.parse.quote(percorso)}"
-                        f"&score={int(circolarita)}"
-                    )
+                full_url = base_url + query_string
 
-            full_url = base_url + query_string
+                # Generiamo l'immagine del QR code basata sul nuovo URL
+                qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={urllib.parse.quote(full_url)}"
 
-            # Generiamo l'immagine del QR code basata sul nuovo URL
-            qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={urllib.parse.quote(full_url)}"
+                # 2. DISPOSIZIONE GRAFICA QR a sinistra, Testo a destra
+                col_qr_img, col_qr_testo = st.columns([1, 2])
 
-            # 2. DISPOSIZIONE GRAFICA IDENTICA A PRIMA (QR a sinistra, Testo a destra)
-            col_qr_img, col_qr_testo = st.columns([1, 2])
+                with col_qr_img:
+                    # Visualizza il QR code funzionante
+                    st.image(qr_api_url, width=140)
 
-            with col_qr_img:
-                # Visualizza il QR code funzionante
-                st.image(qr_api_url, width=140)
-
-            with col_qr_testo:
+                with col_qr_testo:
                     st.write(f"**Tecnologia Designata:** {percorso}")
                     st.write("")  # Piccolo spazio verticale
                     st.markdown(
@@ -502,7 +499,7 @@ with tab3:
                         "i dati di conformità al gestionale dell'impianto di smaltimento."
                         "</p>",
                         unsafe_allow_html=True
-                        )
+                    )
 
 # Grafico Sankey
     with col_b:
