@@ -128,8 +128,8 @@ lista_attori = mio_scarto.get_partner_specializzati(
 col_logo, col_titolo = st.columns([1, 7])
 
 # Inserimento logo
-#with col_logo:
-    #st.image("logo.jpg", width=120)
+with col_logo:
+    st.image("logo.jpg", width=120)
 
 # Inserimento Titolo
 with col_titolo:
@@ -405,7 +405,7 @@ with tab3:
             st.markdown("**Status:** 🟢 Verificato (Blockchain/Anti-contraffazione)")
 
         # 2. DATI TECNICI PER MACCHINARI (NIR)
-        with st.expander("Dati Tecnici per Sorting 4.0 (Cloud EON)"):
+        with st.expander("Dati Tecnici per Sorting 4.0"):
             st.markdown("**Composizione Rilevata dal Sensore Ottico:**")
             st.write(f"- Cotone: {c}%\n- Poliestere: {p}%\n- Elastan: {e}%\n- Lana: {l}%\n- Acrilico: {n}%")
 
@@ -422,6 +422,8 @@ with tab3:
         with st.expander("Impronta Ambientale e LCA"):
             st.markdown(f"**Risparmio CO₂ (vs Vergine):** {co2['co2']}")
             st.markdown(f"**Risparmio Idrico:** {co2['acqua']}")
+            st.markdown(f"**Risparmio Energia elettrica:** {co2['energia']}")
+            st.markdown(f"**Risparmio Suolo:** {co2['suolo']}")
             st.markdown(f"**Affidabilità Dato (TRL):** {co2['affidabilità']} / 5")
 
         # 4. CIRCOLARITÀ E QR CODE
