@@ -22,6 +22,42 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+# ==========================================
+# CONTROLLO SCANSIONE QR CODE (PASSAPORTO DIGITALE)
+# ==========================================
+# Controlliamo se l'URL contiene i dati del passaporto digitale
+params = st.query_params
+
+if "passaporto" in params:
+    # Mostra la schermata speciale per smartphone del prof!
+    st.balloons()
+    st.title("📱 Passaporto Digitale del Prodotto")
+    st.subheader(f"Lotto: {params.get('lotto', 'Dato assente')}")
+    st.divider()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.write("### 🔬 Composizione Fibra")
+        st.write(f"- **Cotone:** {params.get('c', 0)}%")
+        st.write(f"- **Poliestere:** {params.get('p', 0)}%")
+        st.write(f"- **Elastan:** {params.get('e', 0)}%")
+        st.write(f"- **Lana:** {params.get('l', 0)}%")
+        st.write(f"- **Acrilico:** {params.get('a', 0)}%")
+        st.write(f"- **Nylon:** {params.get('n', 0)}%")
+
+    with col2:
+        st.write("### ♻️ Strategia di Circolarità")
+        st.info(f"**Trattamento Consigliato:**\n{params.get('trattamento', 'Verifica manuale')}")
+        st.metric(label="Indice Circolarità", value=f"{params.get('score', 50)}%")
+
+    st.divider()
+    if st.button("⬅️ Torna al Pannello Principale DSS"):
+        st.query_params.clear()
+        st.rerun()
+
+    st.stop()  # 🛑 Blocca il resto dell'app così il prof vede solo il passaporto!
+
+
 #==============================
 #           SIDEBAR
 #==============================
@@ -128,8 +164,8 @@ lista_attori = mio_scarto.get_partner_specializzati(
 col_logo, col_titolo = st.columns([1, 7])
 
 # Inserimento logo
-#with col_logo:
-    #st.image("logo.jpg", width=120)
+with col_logo:
+    st.image("logo.jpg", width=120)
 
 # Inserimento Titolo
 with col_titolo:
@@ -384,7 +420,8 @@ with tab1:
 with tab3:
     st.header("Digital Product Passport (DPP)")
     st.markdown(
-        "Simulazione del passaporto digitale conforme alle direttive ESPR per la tracciabilità end-to-end e l'integrazione con i sistemi di sorting 4.0 (sensori NIR).")
+        "Simulazione del passaporto digitale conforme alle direttive ESPR per la tracciabilità end-to-end e l'integrazione "
+        "con i sistemi di sorting 4.0 (sensori NIR).")
 
     import uuid
     import urllib.parse
@@ -426,26 +463,48 @@ with tab3:
             st.markdown(f"**Risparmio Suolo:** {co2['suolo']}")
             st.markdown(f"**Affidabilità Dato (TRL):** {co2['affidabilità']} / 5")
 
+
         # 4. CIRCOLARITÀ E QR CODE
+            # --- TAB 3: GRAFICA ORIGINALE CON QR INTELLIGENTE ---
         with st.expander("Istruzioni di Circolarità ed Esportazione"):
-            st.markdown(f"**Tecnologia Designata:** {percorso}")
+                # Rimane l'expander originale esattamente come nel tuo screenshot
+                #with st.expander("Istruzioni di Circolarità ed Esportazione"):
+                    # 1. GENERAZIONE DEL LINK INTELLIGENTE PER IL PROF
 
-            # Creazione Link per QR Code (Mailto simulata)
-            oggetto = urllib.parse.quote(f"Manifesto di Carico - {uid_capo}")
-            corpo = urllib.parse.quote(
-                f"Trasmissione dati Passaporto Digitale.\nUID: {uid_capo}\nDestinazione: {destinazione_scelta}\nTecnologia: {percorso}")
-            mailto_link = f"mailto:compliance@hub-circolare.eu?subject={oggetto}&body={corpo}"
+            base_url = "https://dss-tessile.streamlit.app/"  # Il tuo URL ufficiale
 
-            # Generazione QR Code tramite API gratuita
-            qr_url = f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={mailto_link}"
+            query_string = (
+                        f"?passaporto=true"
+                        f"&lotto={urllib.parse.quote(nome_lotto)}"
+                        f"&c={c}&p={p}&e={e}&l={l}&a={a}&n={n}"
+                        f"&trattamento={urllib.parse.quote(percorso)}"
+                        f"&score={int(circolarita)}"
+                    )
 
-            col_qr1, col_qr2 = st.columns([1, 2])
-            with col_qr1:
-                st.image(qr_url, width=120)
-            with col_qr2:
-                st.markdown(
-                    "**Scansiona il QR Code** per trasmettere istantaneamente i dati di conformità al gestionale dell'impianto di smaltimento.")
+            full_url = base_url + query_string
 
+            # Generiamo l'immagine del QR code basata sul nuovo URL
+            qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={urllib.parse.quote(full_url)}"
+
+            # 2. DISPOSIZIONE GRAFICA IDENTICA A PRIMA (QR a sinistra, Testo a destra)
+            col_qr_img, col_qr_testo = st.columns([1, 2])
+
+            with col_qr_img:
+                # Visualizza il QR code funzionante
+                st.image(qr_api_url, width=140)
+
+            with col_qr_testo:
+                    st.write(f"**Tecnologia Designata:** {percorso}")
+                    st.write("")  # Piccolo spazio verticale
+                    st.markdown(
+                        "<p style='color: #a3a8b4; font-size: 14px; margin-top: 5px;'>"
+                        "<strong>Scansiona il QR Code</strong> per trasmettere istantaneamente "
+                        "i dati di conformità al gestionale dell'impianto di smaltimento."
+                        "</p>",
+                        unsafe_allow_html=True
+                        )
+
+# Grafico Sankey
     with col_b:
         st.markdown("### Flusso Termodinamico (Sankey)")
         st.markdown("Rappresentazione delle rese e degli scarti fisici durante il trattamento industriale.")
