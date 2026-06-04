@@ -1,7 +1,8 @@
 import urllib.parse
 import plotly.graph_objects as go
 import streamlit as st
-
+import uuid
+import plotly.graph_objects as go
 from tessuto import ScartoTessile
 
 st.set_page_config(
@@ -66,7 +67,7 @@ st.sidebar.header("🌍 Localizzazione Utente")
 
 nazioni_origine = {
     "Svizzera (Ticino)": [46.0037, 8.9511],
-    "Italia (Nord)": [45.4642, 9.1900],
+    "Italia": [45.4642, 9.1900],
     "Germania": [51.1657, 10.4515],
     "Belgio": [50.8503, 4.3517],
     "Paesi Bassi": [52.1326, 5.2913],
@@ -92,14 +93,14 @@ tipo_trasporto = st.sidebar.selectbox("Mezzo di Trasporto Logistico", ["Camion",
 
 # 3. Destinazione Finale (Brand e Poli Logistici per la vendita)
 destinazioni_finali = {
-    "Mango (Barcellona, Spagna)": [41.3851, 2.1734],
-    "Bobo Choses (Mataró, Spagna)": [41.5381, 2.4445],
-    "Decathlon (Lilla, Francia)": [50.6292, 3.1360],
-    "C&A (Düsseldorf, Germania)": [51.2277, 6.7735],
-    "Sioen Industries (Ardooie, Belgio)": [50.9757, 3.1996],
-    "Marks & Spencer (Londra, UK)": [51.5074, -0.1278],
-    "H&M (Stoccolma, Svezia)": [59.3293, 18.0686],
-    "Pusu Skis (Jyväskylä, Finlandia)": [62.2415, 25.7209]
+    "Barcellona, Spagna (Mango)": [41.3851, 2.1734],
+    "Mataró, Spagna (Bobo Choses)": [41.5381, 2.4445],
+    "Lilla, Francia (Decathlon)": [50.6292, 3.1360],
+    "Düsseldorf, Germania (C&A)": [51.2277, 6.7735],
+    "Ardooie, Belgio (Sioen Industries)": [50.9757, 3.1996],
+    "Londra, UK (Marks & Spencer)": [51.5074, -0.1278],
+    "Stoccolma, Svezia (H&M)": [59.3293, 18.0686],
+    "Jyväskylä, Finlandia (Pusu Skis)": [62.2415, 25.7209]
 }
 destinazione_scelta = st.sidebar.selectbox("Destinazione Prodotto Finito (Brand):", list(destinazioni_finali.keys()))
 lat_arrivo, lon_arrivo = destinazioni_finali[destinazione_scelta]
@@ -164,8 +165,8 @@ lista_attori = mio_scarto.get_partner_specializzati(
 col_logo, col_titolo = st.columns([1, 7])
 
 # Inserimento logo
-#with col_logo:
-    #st.image("logo.jpg", width=120)
+with col_logo:
+    st.image("logo.jpg", width=120)
 
 # Inserimento Titolo
 with col_titolo:
@@ -175,7 +176,7 @@ with col_titolo:
 st.subheader(f"Analisi per: {nome_lotto}")
 
 # --- CREAZIONE DELLE TAB PER UN LAYOUT PIÙ PULITO ---
-tab1, tab2, tab3 = st.tabs(["📊 Dashboard & KPI", "🌍 Mappa Supply Chain", "🏷️ Passaporto Digitale"])
+tab1, tab2, tab3 = st.tabs(["📊 Dashboard & KPI", "🌍 Supply Chain Map", "🏷️ Digital Passport"])
 
 
 # ==========================================
@@ -306,48 +307,53 @@ with tab1:
                 best_riciclatore = riciclatori[0]
 
                 # Usiamo le coordinate scelte dalla sidebar
-                brand_finale = {"nome": destinazione_scelta, "lat": lat_arrivo, "lon": lon_arrivo}
+                brand_finale = {"nome": destinazione_scelta, "lat": lat_arrivo, "lon": lon_arrivo, "mezzo": tipo_trasporto}
 
                 # --- CALCOLO KM TOTALI DEL PROCESSO ---
-                km1 = mio_scarto.calcola_distanza(lat_partenza, lon_partenza, best_sorter["lat"], best_sorter["lon"])
-                km2 = mio_scarto.calcola_distanza(best_sorter["lat"], best_sorter["lon"], best_riciclatore["lat"],
-                                                  best_riciclatore["lon"])
-                km3 = mio_scarto.calcola_distanza(best_riciclatore["lat"], best_riciclatore["lon"], brand_finale["lat"],
-                                                  brand_finale["lon"])
+                km1 = mio_scarto.calcola_distanza_realistica(lat_partenza, lon_partenza, best_sorter["lat"], best_sorter["lon"], tipo_trasporto)
+
+                km2 = mio_scarto.calcola_distanza_realistica(best_sorter["lat"], best_sorter["lon"], best_riciclatore["lat"], best_riciclatore["lon"], tipo_trasporto)
+
+                km3 = mio_scarto.calcola_distanza_realistica(best_riciclatore["lat"], best_riciclatore["lon"], brand_finale["lat"], brand_finale["lon"], tipo_trasporto)
+
                 km_totali = km1 + km2 + km3
 
-                # --- CREAZIONE MAPPA ---
+                # --- CREAZIONE MAPPA LINEARE E PULITA ---
+                fig_map = go.Figure()
+
+                # Ricreiamo la lista unica delle coordinate sequenziali del viaggio
                 lats_percorso = [lat_partenza, best_sorter["lat"], best_riciclatore["lat"], brand_finale["lat"]]
                 lons_percorso = [lon_partenza, best_sorter["lon"], best_riciclatore["lon"], brand_finale["lon"]]
 
-                fig_map = go.Figure()
-
-                # Linea del percorso
+                # Disegniamo un unico tracciato continuo, elegante e senza nodi strani
                 fig_map.add_trace(go.Scattermapbox(
-                    mode='lines', lat=lats_percorso, lon=lons_percorso,
+                    mode='lines',
+                    lat=lats_percorso,
+                    lon=lons_percorso,
                     line=dict(width=3, color='rgba(0, 123, 255, 0.8)'),
                     name="Flusso Materiale"
                 ))
 
-                # Punti della filiera
+                # 2. PUNTI DELLA FILIERA (MARKERS IDENTICI A PRIMA)
+                lats_punti = [lat_partenza, best_sorter["lat"], best_riciclatore["lat"], brand_finale["lat"]]
+                lons_punti = [lon_partenza, best_sorter["lon"], best_riciclatore["lon"], brand_finale["lon"]]
                 colori_tappe = ['red', 'orange', 'green', 'purple']
                 nomi_tappe = ['Origine', 'Smistamento', 'Riciclo', 'Nuovo Prodotto']
 
-                for i in range(len(lats_percorso)):
+                for i in range(len(lats_punti)):
                     fig_map.add_trace(go.Scattermapbox(
-                        lat=[lats_percorso[i]], lon=[lons_percorso[i]],
+                        lat=[lats_punti[i]], lon=[lons_punti[i]],
                         mode='markers',
                         marker=go.scattermapbox.Marker(size=14, color=colori_tappe[i]),
                         name=nomi_tappe[i], hovertext=nomi_tappe[i]
                     ))
-
                 # --- CALCOLO CENTRO E ZOOM ADATTIVO ---
                 # (Spostato FUORI dal ciclo for per non sovrascrivere il layout)
-                centro_lat = sum(lats_percorso) / len(lats_percorso)
-                centro_lon = sum(lons_percorso) / len(lons_percorso)
+                centro_lat = sum(lats_punti) / len(lats_punti)
+                centro_lon = sum(lons_punti) / len(lons_punti)
 
-                diff_lat = max(lats_percorso) - min(lats_percorso)
-                diff_lon = max(lons_percorso) - min(lons_percorso)
+                diff_lat = max(lats_punti) - min(lats_punti)
+                diff_lon = max(lons_punti) - min(lons_punti)
                 diff_max = max(diff_lat, diff_lon)
 
                 if diff_max > 15:
@@ -423,9 +429,14 @@ with tab3:
         "Simulazione del passaporto digitale conforme alle direttive ESPR per la tracciabilità end-to-end e l'integrazione "
         "con i sistemi di sorting 4.0 (sensori NIR).")
 
-    import uuid
-    import urllib.parse
-    import plotly.graph_objects as go
+
+    composizione_dinamica = ""
+    if c > 0: composizione_dinamica += f"- Cotone: {c}%\n"
+    if p > 0: composizione_dinamica += f"- Poliestere: {p}%\n"
+    if e > 0: composizione_dinamica += f"- Elastan: {e}%\n"
+    if l > 0: composizione_dinamica += f"- Lana: {l}%\n"
+    if a > 0: composizione_dinamica += f"- Acrilico: {a}%\n"
+    if n > 0: composizione_dinamica += f"- Nylon: {n}%\n"
 
     # Generiamo un ID univoco simulato per il lotto (stile Certilogo/EON)
     uid_capo = f"TX-2026-{str(uuid.uuid4())[:6].upper()}"
@@ -442,12 +453,12 @@ with tab3:
             st.markdown("**Status:** 🟢 Verificato (Blockchain/Anti-contraffazione)")
 
         # 2. DATI TECNICI PER MACCHINARI (NIR)
-        with st.expander("Dati Tecnici per Sorting 4.0"):
+        with st.expander("Dati Tecnici"):
             st.markdown("**Composizione Rilevata dal Sensore Ottico:**")
-            st.write(f"- Cotone: {c}%\n- Poliestere: {p}%\n- Elastan: {e}%\n- Lana: {l}%\n- Acrilico: {n}%")
+            st.write(f"{composizione_dinamica}")
 
             # Simulazione di lettura dei contaminanti
-            if e > 0:
+            if e > 5:
                 st.warning(
                     "Allerta Sensori: Rilevata presenza di contaminanti poliuretanici (Elastan). Deviare verso sfilacciatura.")
             elif n > 0:
@@ -463,44 +474,57 @@ with tab3:
             st.markdown(f"**Risparmio Suolo:** {co2['suolo']}")
             st.markdown(f"**Affidabilità Dato (TRL):** {co2['affidabilità']} / 5")
 
-            # ==========================================
-            # 4. CIRCOLARITÀ E QR CODE
-            # ==========================================
+        # ==========================================
+        # 4. CIRCOLARITÀ E QR CODE
+        # ==========================================
         with st.expander("Istruzioni di Circolarità ed Esportazione"):
-                # 1. GENERAZIONE DEL LINK INTELLIGENTE PER IL PROF
 
-                base_url = "https://share.streamlit.io/tessile123/dss---tessile/main/app.py/?embed=true"
-                
-                query_string = (
-                    f"&passaporto=true"
-                    f"&lotto={urllib.parse.quote(nome_lotto)}"
-                    f"&c={c}&p={p}&e={e}&l={l}&a={a}&n={n}"
-                    f"&trattamento={urllib.parse.quote(percorso)}"
-                    f"&score={int(circolarita)}"
+            # Generiamo un testo formattato con tutti i dati del lotto corrente
+            testo_passaporto = (
+                f"DIGITAL PRODUCT PASSPORT (DPP)\n"
+                f"----------------------------------\n"
+                f"Lotto: {nome_lotto}\n"
+                f"UID: {uid_capo if 'uid_capo' in locals() else 'TX-2026-♻️'}\n"
+                f"Origine: {nazione_scelta}\n"
+                f"Destinazione: {destinazione_scelta}\n"
+                f"----------------------------------\n"
+                f"COMPOSIZIONE FIBRA:\n"
+                f"{composizione_dinamica}"  # Inserisce solo i materiali presenti!
+                f"----------------------------------\n"
+                f"♻️ STRATEGIA DI CIRCOLARITÀ:\n"
+                f"Tecnologia Designata: {percorso}\n"
+                f"- Risparmio CO2: {co2['co2']}\n"
+                f"- Risparmio Idrico: {co2['acqua']}\n"
+                f"- Risparmio Energia: {co2['energia']}\n"
+                f"- Risparmio Suolo: {co2['suolo']}\n"
+                f"- Affidabilita' Dato (TRL): {co2['affidabilità']}/5\n"
+
+            )
+
+            # Usiamo un'API pubblica che trasforma il testo in una pagina web leggibile al volo
+            import urllib.parse
+
+            testo_codificato = urllib.parse.quote_plus(testo_passaporto)
+
+            # Usiamo l'API dicendogli che il contenuto è puro testo (data=...)
+            qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={testo_codificato}"
+
+            # DISPOSIZIONE GRAFICA IDENTICA ALL'ORIGINALE
+            col_qr_img, col_qr_testo = st.columns([1, 2])
+
+            with col_qr_img:
+                st.image(qr_api_url, width=140)
+
+            with col_qr_testo:
+                st.write(f"**Tecnologia Designata:** {percorso}")
+                st.write("")  # Spazio
+                st.markdown(
+                    "<p style='color: #a3a8b4; font-size: 14px; margin-top: 5px;'>"
+                    "<strong>Scansiona il QR Code</strong> per visualizzare istantaneamente "
+                    "il Passaporto Digitale del Prodotto (DPP) con i dati di tracciabilità sul tuo smartphone."
+                    "</p>",
+                    unsafe_allow_html=True
                 )
-
-                full_url = base_url + query_string
-
-                # Generiamo l'immagine del QR code basata sul nuovo URL
-                qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=200x200&data={urllib.parse.quote(full_url)}"
-
-                # 2. DISPOSIZIONE GRAFICA QR a sinistra, Testo a destra
-                col_qr_img, col_qr_testo = st.columns([1, 2])
-
-                with col_qr_img:
-                    # Visualizza il QR code funzionante
-                    st.image(qr_api_url, width=140)
-
-                with col_qr_testo:
-                    st.write(f"**Tecnologia Designata:** {percorso}")
-                    st.write("")  # Piccolo spazio verticale
-                    st.markdown(
-                        "<p style='color: #a3a8b4; font-size: 14px; margin-top: 5px;'>"
-                        "<strong>Scansiona il QR Code</strong> per trasmettere istantaneamente "
-                        "i dati di conformità al gestionale dell'impianto di smaltimento."
-                        "</p>",
-                        unsafe_allow_html=True
-                    )
 
 # Grafico Sankey
     with col_b:

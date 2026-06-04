@@ -1,8 +1,9 @@
-import math
 
+import math
 
 class ScartoTessile:
     """Questa è la tua classe base, come in Java"""
+
 
     def __init__(self, nome, cotone, poliestere, elastan, lana=0, nylon=0, acrilico=0):
         self.nome = nome
@@ -161,20 +162,39 @@ class ScartoTessile:
     #           CALCOLO DISTANZA
     # ======================================
 
-    def calcola_distanza(self, lat1, lon1, lat2, lon2):
-        """Formula dell'Haversine per calcolare la distanza tra due coordinate"""
-        R = 6371.0  # Raggio della Terra in km
+    def calcola_distanza_realistica(self, lat1, lon1, lat2, lon2, mezzo_scelto):
 
-        lat1_rad, lon1_rad = math.radians(lat1), math.radians(lon1)
-        lat2_rad, lon2_rad = math.radians(lat2), math.radians(lon2)
+        # Raggio della Terra in chilometri
+        R = 6371.0
 
-        dlon = lon2_rad - lon1_rad
-        dlat = lat2_rad - lat1_rad
+        # Conversione delle coordinate da gradi a radianti
+        phi1 = math.radians(lat1)
+        phi2 = math.radians(lat2)
+        delta_phi = math.radians(lat2 - lat1)
+        delta_lambda = math.radians(lon2 - lon1)
 
-        a = math.sin(dlat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2) ** 2
-        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+        # Formula trigonometrica
+        a = math.sin(delta_phi / 2.0) ** 2 + \
+            math.cos(phi1) * math.cos(phi2) * \
+            math.sin(delta_lambda / 2.0) ** 2
 
-        return round(R * c, 0)
+        c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
+        distanza_linea_aria = R * c
+
+        # 1. SE IL MEZZO È LA NAVE, APPLICHIAMO LA DEVIAZIONE MARITTIMA
+        if mezzo_scelto.lower() == "nave":
+            # Moltiplicatore logistico standard per rotte circumnavigate
+            return distanza_linea_aria * 1.6
+
+            # Se è camion o aereo, la linea d'aria (o autostradale) va bene
+        elif mezzo_scelto.lower() == "camion":
+            return distanza_linea_aria * 1.2  # coefficiente di tortuosità stradale
+
+        elif mezzo_scelto.lower() == "treno":
+            return distanza_linea_aria * 1.1  # coefficiente di tortuosità ferroviaria
+
+        return distanza_linea_aria
+
 
     def get_partner_specializzati(self, lat_origine, lon_origine, is_green_list, paese_origine, tipo_trasporto="Camion", tecnica_suggerita=""):
         # 1. MIX ENERGETICO - CARBON INTENSITY (kg CO2 per kWh)
@@ -196,7 +216,7 @@ class ScartoTessile:
         emissioni_trasporto = {
             "Treno": 0.02,  # Molto efficiente per lunghe distanze
             "Camion": 0.10,  # Standard su gomma
-            "Nave": 0.  #
+            "Nave": 0.025 #
         }
         fattore_trasporto = emissioni_trasporto.get(tipo_trasporto, 0.10)
 
@@ -275,7 +295,7 @@ class ScartoTessile:
 
             # Se supera TUTTI i test (Materiale, Tecnica e Dogana), allora procediamo al calcolo ambientale
             if materiale_ok and tecnica_ok and dogana_ok:
-                dist = self.calcola_distanza(lat_origine, lon_origine, a["lat"], a["lon"])
+                dist = self.calcola_distanza_realistica(lat_origine, lon_origine, a["lat"], a["lon"], tipo_trasporto)
                 co2_trasporto = dist * fattore_trasporto
 
                 energia_kwh = consumo_tecnologia.get(a["tecnica"],
