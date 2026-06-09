@@ -65,7 +65,7 @@ if "passaporto" in params:
             .c4 { left: 55%; animation-duration: 4.5s; animation-delay: 3s; }
             .c5 { left: 70%; animation-duration: 3.2s; animation-delay: 1.5s; }
             .c6 { left: 85%; animation-duration: 3.5s; animation-delay: 0.5s; }
-            .c7 { left: 95%; animation-duration: 3.4s; animation-delay: 2.5s; }
+            .c7 { left: 90%; animation-duration: 3.4s; animation-delay: 2.5s; }
             </style>
 
             <div class="contenitore-vestiti">
