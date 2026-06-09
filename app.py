@@ -477,52 +477,64 @@ with tab3:
         # ==========================================
         # 4. CIRCOLARITÀ E QR CODE
         # ==========================================
+
         with st.expander("Istruzioni di Circolarità ed Esportazione"):
+                # Generiamo un testo formattato con tutti i dati del lotto corrente
+                testo_passaporto = (
+                    f"DIGITAL PRODUCT PASSPORT (DPP)\n"
+                    f"----------------------------------\n"
+                    f"Lotto: {nome_lotto}\n"
+                    f"UID: {uid_capo if 'uid_capo' in locals() else 'TX-2026-♻️'}\n"
+                    f"Origine: {nazione_scelta}\n"
+                    f"Destinazione: {destinazione_scelta}\n"
+                    f"----------------------------------\n"
+                    f"COMPOSIZIONE FIBRA:\n"
+                    f"{composizione_dinamica}"  # Inserisce solo i materiali presenti!
+                    f"----------------------------------\n"
+                    f"♻️ STRATEGIA DI CIRCOLARITÀ:\n"
+                    f"Tecnologia Designata: {percorso}\n"
+                    f"- Risparmio CO2: {co2['co2']}\n"
+                    f"- Risparmio Idrico: {co2['acqua']}\n"
+                    f"- Risparmio Energia: {co2['energia']}\n"
+                    f"- Risparmio Suolo: {co2['suolo']}\n"
+                    f"- Affidabilita' Dato (TRL): {co2['affidabilità']}/5\n"
+                )  # <--- Parentesi tonda chiusa correttamente!
 
-            # Generiamo un testo formattato con tutti i dati del lotto corrente
-            testo_passaporto = (
-                f"DIGITAL PRODUCT PASSPORT (DPP)\n"
-                f"----------------------------------\n"
-                f"Lotto: {nome_lotto}\n"
-                f"UID: {uid_capo if 'uid_capo' in locals() else 'TX-2026-♻️'}\n"
-                f"Origine: {nazione_scelta}\n"
-                f"Destinazione: {destinazione_scelta}\n"
-                f"----------------------------------\n"
-                f"COMPOSIZIONE FIBRA:\n"
-                f"{composizione_dinamica}"  # Inserisce solo i materiali presenti!
-                f"----------------------------------\n"
-                f"♻️ STRATEGIA DI CIRCOLARITÀ:\n"
-                f"Tecnologia Designata: {percorso}\n"
-                f"- Risparmio CO2: {co2['co2']}\n"
-                f"- Risparmio Idrico: {co2['acqua']}\n"
-                f"- Risparmio Energia: {co2['energia']}\n"
-                f"- Risparmio Suolo: {co2['suolo']}\n"
-                f"- Affidabilita' Dato (TRL): {co2['affidabilità']}/5\n"
+                import urllib.parse
 
-            )
+                # URL della tua app live online (si adatta se sei in locale o sul cloud di Streamlit)
+                url_applicazione = "https://super-fiber.streamlit.app"
 
-            # Usiamo un'API pubblica che trasforma il testo in una pagina web leggibile al volo
-            import urllib.parse
-
-            ttesto_codificato = urllib.parse.quote_plus(link_passaporto)
-            qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={testo_codificato}"
-
-            # DISPOSIZIONE GRAFICA IDENTICA ALL'ORIGINALE
-            col_qr_img, col_qr_testo = st.columns([1, 2])
-
-            with col_qr_img:
-                st.image(qr_api_url, width=140)
-
-            with col_qr_testo:
-                st.write(f"**Tecnologia Designata:** {percorso}")
-                st.write("")  # Spazio
-                st.markdown(
-                    "<p style='color: #a3a8b4; font-size: 14px; margin-top: 5px;'>"
-                    "<strong>Scansiona il QR Code</strong> per visualizzare istantaneamente "
-                    "il Passaporto Digitale del Prodotto (DPP) con i dati di tracciabilità sul tuo smartphone."
-                    "</p>",
-                    unsafe_allow_html=True
+                # Costruiamo il link passandogli tutti i parametri necessari per far attivare st.balloons()
+                link_passaporto = (
+                    f"{url_applicazione}/?"
+                    f"passaporto=true&"
+                    f"lotto={urllib.parse.quote(nome_lotto)}&"
+                    f"c={c}&p={p}&e={e}&l={l}&a={a}&n={n}&"
+                    f"trattamento={urllib.parse.quote(percorso)}&"
+                    f"score={int(circolarita if 'circolarita' in locals() else 50)}"
                 )
+
+                # Ora la variabile link_passaporto esiste e può essere codificata!
+                testo_codificato = urllib.parse.quote_plus(link_passaporto)
+                qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={testo_codificato}"
+
+                # DISPOSIZIONE GRAFICA IDENTICA ALL'ORIGINALE
+                col_qr_img, col_qr_testo = st.columns([1, 2])
+
+                with col_qr_img:
+                    st.image(qr_api_url, width=140)
+
+                with col_qr_testo:
+                    st.write(f"**Tecnologia Designata:** {percorso}")
+                    st.write("")  # Spazio
+                    st.markdown(
+                        "<p style='color: #a3a8b4; font-size: 14px; margin-top: 5px;'>"
+                        "<strong>Scansiona il QR Code</strong> per visualizzare istantaneamente "
+                        "il Passaporto Digitale del Prodotto (DPP) con i dati di tracciabilità sul tuo smartphone."
+                        "</p>",
+                        unsafe_allow_html=True
+                    )
 
 # Grafico Sankey
     with col_b:
