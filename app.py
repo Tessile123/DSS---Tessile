@@ -59,13 +59,13 @@ if "passaporto" in params:
             }
 
             /* Tempi calibrati per finire tutto entro 3.5 secondi */
-            .c1 { left: 10%; animation-duration: 2.5s; animation-delay: 0s; }
-            .c2 { left: 25%; animation-duration: 3.2s; animation-delay: 0.3s; }
-            .c3 { left: 40%; animation-duration: 2.8s; animation-delay: 0.1s; }
-            .c4 { left: 55%; animation-duration: 3.5s; animation-delay: 0.4s; }
-            .c5 { left: 70%; animation-duration: 2.6s; animation-delay: 0.2s; }
-            .c6 { left: 85%; animation-duration: 3.0s; animation-delay: 0s; }
-            .c7 { left: 95%; animation-duration: 2.9s; animation-delay: 0.5s; }
+            .c1 { left: 10%; animation-duration: 4s; animation-delay: 0s; }
+            .c2 { left: 25%; animation-duration: 2s; animation-delay: 2s; }
+            .c3 { left: 40%; animation-duration: 3s; animation-delay: 1s; }
+            .c4 { left: 55%; animation-duration: 4.5s; animation-delay: 3s; }
+            .c5 { left: 70%; animation-duration: 3.2s; animation-delay: 1.5s; }
+            .c6 { left: 85%; animation-duration: 3.5s; animation-delay: 0.5s; }
+            .c7 { left: 95%; animation-duration: 3.4s; animation-delay: 2.5s; }
             </style>
 
             <div class="contenitore-vestiti">
