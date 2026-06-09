@@ -30,33 +30,48 @@ st.markdown("""
 params = st.query_params
 
 if "passaporto" in params:
-    # Mostra la schermata speciale per smartphone del prof!
     st.balloons()
-    st.title("📱 Passaporto Digitale del Prodotto")
+    st.title("📱 Digital Product Passport")
     st.subheader(f"Lotto: {params.get('lotto', 'Dato assente')}")
+    st.markdown(f"**UID:** `{params.get('uid', 'TX-2026-X')}`")
     st.divider()
 
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write("### 🔬 Composizione Fibra")
-        st.write(f"- **Cotone:** {params.get('c', 0)}%")
-        st.write(f"- **Poliestere:** {params.get('p', 0)}%")
-        st.write(f"- **Elastan:** {params.get('e', 0)}%")
-        st.write(f"- **Lana:** {params.get('l', 0)}%")
-        st.write(f"- **Acrilico:** {params.get('a', 0)}%")
-        st.write(f"- **Nylon:** {params.get('n', 0)}%")
+    # --- SEZIONE 1: IDENTITÀ E ORIGINE ---
+    with st.expander("🌍 Identità e Tracciabilità", expanded=True):
+        st.write(f"**Origine:** {params.get('orig', 'N/D')}")
+        st.write(f"**Destinazione Brand:** {params.get('dest', 'N/D')}")
+        st.write("**Status:** 🟢 Verificato in Blockchain")
 
-    with col2:
-        st.write("### ♻️ Strategia di Circolarità")
-        st.info(f"**Trattamento Consigliato:**\n{params.get('trattamento', 'Verifica manuale')}")
-        st.metric(label="Indice Circolarità", value=f"{params.get('score', 50)}%")
+    # --- SEZIONE 2: COMPOSIZIONE E DATI TECNICI ---
+    with st.expander("🔬 Composizione Fibra"):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write(f"- **Cotone:** {params.get('c', 0)}%")
+            st.write(f"- **Poliestere:** {params.get('p', 0)}%")
+            st.write(f"- **Elastan:** {params.get('e', 0)}%")
+        with col2:
+            st.write(f"- **Lana:** {params.get('l', 0)}%")
+            st.write(f"- **Acrilico:** {params.get('a', 0)}%")
+            st.write(f"- **Nylon:** {params.get('n', 0)}%")
+
+    # --- SEZIONE 3: IMPRONTA AMBIENTALE (LCA) ---
+    with st.expander("🍃 Impronta Ambientale (LCA)"):
+        st.write(f"**Risparmio CO₂:** {params.get('co2_s', 'N/D')}")
+        st.write(f"**Risparmio Idrico:** {params.get('h2o_s', 'N/D')}")
+        st.write(f"**Risparmio Energia:** {params.get('en_s', 'N/D')}")
+        st.write(f"**Risparmio Suolo:** {params.get('soil_s', 'N/D')}")
+        st.metric(label="Affidabilità Dato (TRL)", value=f"{params.get('trl', 5)}/5")
+
+    # --- SEZIONE 4: STRATEGIA DI CIRCOLARITÀ ---
+    st.success(f"**Trattamento Consigliato:**\n{params.get('trattamento', 'Verifica manuale')}")
+    st.metric(label="Indice Circolarità Finale", value=f"{params.get('score', 50)}%")
 
     st.divider()
     if st.button("⬅️ Torna al Pannello Principale DSS"):
         st.query_params.clear()
         st.rerun()
 
-    st.stop()  # 🛑 Blocca il resto dell'app così il prof vede solo il passaporto!
+    st.stop()
 
 
 #==============================
@@ -472,7 +487,7 @@ with tab3:
             st.markdown(f"**Risparmio Idrico:** {co2['acqua']}")
             st.markdown(f"**Risparmio Energia elettrica:** {co2['energia']}")
             st.markdown(f"**Risparmio Suolo:** {co2['suolo']}")
-            st.markdown(f"**Affidabilità Dato (TRL):** {co2['affidabilità']} / 5")
+            st.markdown(f"**Affidabilità Dato:** {co2['affidabilità']} / 5")
 
         # ==========================================
         # 4. CIRCOLARITÀ E QR CODE
@@ -506,13 +521,22 @@ with tab3:
                 url_applicazione = "https://super-fiber.streamlit.app"
 
                 # Costruiamo il link passandogli tutti i parametri necessari per far attivare st.balloons()
+                # 2. Generiamo il link reale con TUTTI i parametri necessari
                 link_passaporto = (
                     f"{url_applicazione}/?"
                     f"passaporto=true&"
                     f"lotto={urllib.parse.quote(nome_lotto)}&"
+                    f"uid={uid_capo}&"
+                    f"orig={urllib.parse.quote(nazione_scelta)}&"
+                    f"dest={urllib.parse.quote(destinazione_scelta)}&"
                     f"c={c}&p={p}&e={e}&l={l}&a={a}&n={n}&"
                     f"trattamento={urllib.parse.quote(percorso)}&"
-                    f"score={int(circolarita if 'circolarita' in locals() else 50)}"
+                    f"score={int(circolarita if 'circolarita' in locals() else 50)}&"
+                    f"co2_s={urllib.parse.quote(co2['co2'])}&"
+                    f"h2o_s={urllib.parse.quote(co2['acqua'])}&"
+                    f"en_s={urllib.parse.quote(co2['energia'])}&"
+                    f"soil_s={urllib.parse.quote(co2['suolo'])}&"
+                    f"trl={co2['affidabilità']}"
                 )
 
                 # Ora la variabile link_passaporto esiste e può essere codificata!
