@@ -30,7 +30,7 @@ st.markdown("""
 params = st.query_params
 
 if "passaporto" in params:
-    st.balloons()
+    st.snow()
     st.title("📱 Digital Product Passport")
     st.subheader(f"Lotto: {params.get('lotto', 'Dato assente')}")
     st.markdown(f"**UID:** `{params.get('uid', 'TX-2026-X')}`")
