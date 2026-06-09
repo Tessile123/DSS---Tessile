@@ -290,7 +290,7 @@ with tab1:
 
 
 # ==========================================
-# TAB 2: MAPPA E LOGISTICA
+#       TAB 2: MAPPA E LOGISTICA
 # ==========================================
     with tab2:
         st.subheader("Tracciabilità della Filiera e Distanze")
@@ -420,7 +420,7 @@ with tab1:
 
 
 # ==========================================
-# TAB 3: PASSAPORTO DIGITALE (DPP)
+#       TAB 3: PASSAPORTO DIGITALE (DPP)
 # ==========================================
 
 with tab3:
@@ -504,9 +504,7 @@ with tab3:
             # Usiamo un'API pubblica che trasforma il testo in una pagina web leggibile al volo
             import urllib.parse
 
-            testo_codificato = urllib.parse.quote_plus(testo_passaporto)
-
-            # Usiamo l'API dicendogli che il contenuto è puro testo (data=...)
+            ttesto_codificato = urllib.parse.quote_plus(link_passaporto)
             qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={testo_codificato}"
 
             # DISPOSIZIONE GRAFICA IDENTICA ALL'ORIGINALE

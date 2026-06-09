@@ -125,13 +125,13 @@ class ScartoTessile:
                 "Lana e acrilico": {"energia": "-70%", "co2": "-80%", "acqua": "-90%", "suolo": "-75%", "affidabilità": "5"},
                 "Nylon-spandex": {"energia": "-40%", "co2": "-45%", "acqua": "-35%", "suolo": "0%", "affidabilità": "4"},
                 "Policotone": {"energia": "-35%", "co2": "-40%", "acqua": "-60%", "suolo": "-35%", "affidabilità": "4"},
-                "Triple Blend": {"energia": "-25%", "co2": "-25%", "acqua": "-40%", "suolo": "-20%", "affidabilità": "4"}
+                "Triple Blend": {"energia": "-25%", "co2": "-25%", "acqua": "-40%", "suolo": "-20%", "affidabilità": "3"}
             },
             "Chimico": {
                 "Lana e acrilico": {"energia": "-50%", "co2": "-65%", "acqua": "-80%", "suolo": "-70%", "affidabilità": "4"},
                 "Nylon-spandex": {"energia": "-55%", "co2": "-70%", "acqua": "-50%", "suolo": "0%", "affidabilità": "3"},
                 "Policotone": {"energia": "-50%", "co2": "-65%", "acqua": "-75%", "suolo": "-40%", "affidabilità": "4"},
-                "Triple Blend": {"energia": "-45%", "co2": "-55%", "acqua": "-65%", "suolo": "-30%", "affidabilità": "4"}
+                "Triple Blend": {"energia": "-45%", "co2": "-55%", "acqua": "-65%", "suolo": "-30%", "affidabilità": "3"}
             },
             "Enzimatico": {
                 "Lana e acrilico": {"energia": "-60%", "co2": "-70%", "acqua": "-85%", "suolo": "-70%", "affidabilità": "3"},
