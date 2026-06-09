@@ -34,11 +34,10 @@ if "passaporto" in params:
     # --- ANIMAZIONE CASCATA DI VESTITI IN PURO CSS (ANTI-BLOCCO) ---
     st.markdown("""
             <style>
-            /* Creiamo i binari di caduta per i vestiti */
             @keyframes piove {
-                0% { top: -10%; transform: translateX(0) rotate(0deg); opacity: 1; }
-                50% { transform: translateX(20px) rotate(180deg); }
-                100% { top: 110%; transform: translateX(-20px) rotate(360deg); opacity: 0; }
+                0% { top: -15%; transform: translateX(0) rotate(0deg); opacity: 1; }
+                50% { transform: translateX(15px) rotate(180deg); opacity: 1; }
+                100% { top: 110%; transform: translateX(-15px) rotate(360deg); opacity: 0; }
             }
 
             .contenitore-vestiti {
@@ -52,21 +51,21 @@ if "passaporto" in params:
                 overflow: hidden;
             }
 
-            /* Definiamo i singoli capi appesi che cadono a cascata */
+            /* Esegue l'animazione 1 sola volta e mantiene lo stato finale (invisibile) */
             .capo {
                 position: absolute;
                 font-size: 35px;
-                animation: piove linear infinite;
+                animation: piove linear 1 forwards;
             }
 
-            /* Assegniamo posizioni e tempi diversi per creare l'effetto casuale */
-            .c1 { left: 10%; animation-duration: 5s; animation-delay: 0s; }
-            .c2 { left: 25%; animation-duration: 7s; animation-delay: 2s; }
-            .c3 { left: 40%; animation-duration: 6s; animation-delay: 1s; }
-            .c4 { left: 55%; animation-duration: 8s; animation-delay: 3s; }
-            .c5 { left: 70%; animation-duration: 5s; animation-delay: 1.5s; }
-            .c6 { left: 85%; animation-duration: 7s; animation-delay: 0.5s; }
-            .c7 { left: 95%; animation-duration: 6s; animation-delay: 2.5s; }
+            /* Tempi calibrati per finire tutto entro 3.5 secondi */
+            .c1 { left: 10%; animation-duration: 2.5s; animation-delay: 0s; }
+            .c2 { left: 25%; animation-duration: 3.2s; animation-delay: 0.3s; }
+            .c3 { left: 40%; animation-duration: 2.8s; animation-delay: 0.1s; }
+            .c4 { left: 55%; animation-duration: 3.5s; animation-delay: 0.4s; }
+            .c5 { left: 70%; animation-duration: 2.6s; animation-delay: 0.2s; }
+            .c6 { left: 85%; animation-duration: 3.0s; animation-delay: 0s; }
+            .c7 { left: 95%; animation-duration: 2.9s; animation-delay: 0.5s; }
             </style>
 
             <div class="contenitore-vestiti">
