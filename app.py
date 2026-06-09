@@ -30,7 +30,36 @@ st.markdown("""
 params = st.query_params
 
 if "passaporto" in params:
-    st.snow()
+    st.markdown("""
+            <style>
+            @keyframes fall {
+                0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+                100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+            }
+            .cloth-particle {
+                position: fixed;
+                top: -50px;
+                font-size: 32px;
+                z-index: 9999;
+                pointer-events: none;
+                animation: fall linear forwards;
+            }
+            </style>
+
+            <script>
+            const emojis = ['👕', '👗', '👖', '👚', '🧥', '🧦', '♻️'];
+            for (let i = 0; i < 40; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'cloth-particle';
+                particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                particle.style.animationDelay = (Math.random() * 2) + 's';
+                document.body.appendChild(particle);
+            }
+            </script>
+        """, unsafe_allow_html=True)
+
     st.title("📱 Digital Product Passport")
     st.subheader(f"Lotto: {params.get('lotto', 'Dato assente')}")
     st.markdown(f"**UID:** `{params.get('uid', 'TX-2026-X')}`")
