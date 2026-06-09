@@ -112,7 +112,7 @@ if "passaporto" in params:
 
     # --- SEZIONE 4: STRATEGIA DI CIRCOLARITÀ ---
     st.success(f"**Trattamento Consigliato:**\n{params.get('trattamento', 'Verifica manuale')}")
-    st.metric(label="Indice Circolarità Finale", value=f"{params.get('score', 50)}%")
+    #st.metric(label="Indice Circolarità Finale", value=f"{params.get('score', 50)}%")
 
     st.divider()
     if st.button("⬅️ Torna al Pannello Principale DSS"):
@@ -560,8 +560,8 @@ with tab3:
                     f"- Risparmio Idrico: {co2['acqua']}\n"
                     f"- Risparmio Energia: {co2['energia']}\n"
                     f"- Risparmio Suolo: {co2['suolo']}\n"
-                    f"- Affidabilita' Dato (TRL): {co2['affidabilità']}/5\n"
-                )  # <--- Parentesi tonda chiusa correttamente!
+                    f"- Affidabilità Dato: {co2['affidabilità']}/5\n"
+                )
 
                 import urllib.parse
 
