@@ -26,12 +26,12 @@ st.markdown("""
 # ==========================================
 # CONTROLLO SCANSIONE QR CODE (PASSAPORTO DIGITALE)
 # ==========================================
-# Controlliamo se l'URL contiene i dati del passaporto digitale
+# Controllo se l'URL contiene i dati del passaporto digitale
 params = st.query_params
 
 if "passaporto" in params:
 
-    # --- ANIMAZIONE CASCATA DI VESTITI IN PURO CSS (ANTI-BLOCCO) ---
+    # --- ANIMAZIONE CASCATA DI VESTITI ---
     st.markdown("""
             <style>
             @keyframes piove {
@@ -489,8 +489,7 @@ with tab1:
 with tab3:
     st.header("Digital Product Passport (DPP)")
     st.markdown(
-        "Simulazione del passaporto digitale conforme alle direttive ESPR per la tracciabilità end-to-end e l'integrazione "
-        "con i sistemi di sorting 4.0 (sensori NIR).")
+        "Simulazione del passaporto digitale conforme alle direttive ESPR per la tracciabilità end-to-end")
 
 
     composizione_dinamica = ""
@@ -536,6 +535,7 @@ with tab3:
             st.markdown(f"**Risparmio Energia elettrica:** {co2['energia']}")
             st.markdown(f"**Risparmio Suolo:** {co2['suolo']}")
             st.markdown(f"**Affidabilità Dato:** {co2['affidabilità']} / 5")
+
 
         # ==========================================
         # 4. CIRCOLARITÀ E QR CODE
