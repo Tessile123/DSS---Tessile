@@ -60,8 +60,8 @@ if "passaporto" in params:
 
             /* Tempi calibrati per finire tutto entro 3.5 secondi */
             .c1 { left: 10%; animation-duration: 4s; animation-delay: 0s; }
-            .c2 { left: 25%; animation-duration: 2s; animation-delay: 2s; }
-            .c3 { left: 40%; animation-duration: 3s; animation-delay: 1s; }
+            .c2 { left: 25%; animation-duration: 5s; animation-delay: 2s; }
+            .c3 { left: 40%; animation-duration: 3.5s; animation-delay: 1s; }
             .c4 { left: 55%; animation-duration: 4.5s; animation-delay: 3s; }
             .c5 { left: 70%; animation-duration: 3.2s; animation-delay: 1.5s; }
             .c6 { left: 85%; animation-duration: 3.5s; animation-delay: 0.5s; }
