@@ -610,24 +610,24 @@ with tab3:
 
 # Grafico Sankey
     with col_b:
-        st.markdown("### Flusso Termodinamico (Sankey)")
+        st.markdown("### Flusso de Materiali ")
         st.markdown("Rappresentazione delle rese e degli scarti fisici durante il trattamento industriale.")
 
         # Parametri logici dinamici in base alla tecnologia scelta dall'AI
         if "Chimico" in percorso:
             resa = 85
             scarto = 15
-            nome_scarto = "Solventi esausti / Decolorazione"
+            nome_scarto = "Sottoprodotti di processo"
             colore_flusso = "#17a2b8"  # Azzurro chimica
         elif "Meccanico" in percorso:
             resa = 70
             scarto = 30
-            nome_scarto = "Polvere / Fibre Corte (Downcycling)"
+            nome_scarto = "Cascame tessile"
             colore_flusso = "#6c757d"  # Grigio meccanica
         else:
             resa = 90
             scarto = 10
-            nome_scarto = "Scarto Biologico (Biomassa)"
+            nome_scarto = "Frazione organica residua"
             colore_flusso = "#28a745"  # Verde biotech
 
         # Creazione Diagramma di Sankey con Plotly
