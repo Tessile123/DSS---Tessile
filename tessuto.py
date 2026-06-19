@@ -47,11 +47,12 @@ class ScartoTessile:
                     "man mano che aumentano i volumi di rifiuti trattati."
                 )
             else:
-                return "🔵 Riciclo Enzimatico", (
-                    f"L'algoritmo rileva un blend con Elastan al {self.elastan}%. Poiché supera la soglia limite del 5%, "
-                    "il riciclo chimico è bloccato per il rischio di degradazione dei solventi. Il sistema forza un processo "
-                    "biotecnologico a enzimi per separare le fibre in modo selettivo."
-                )
+                 return "🔴 Riciclo Meccanico", (
+                    "Il riciclo meccanico è una tecnologia consolidata ma degrada la fibra: le sfilacciatrici spezzano "
+                    "il tessuto in fibre corte che richiedono l’aggiunta di materiale vergine. È un processo a basso impatto "
+                    "ambientale, ma porta inevitabilmente al downcycling e a prodotti di qualità inferiore come imbottiture"
+                    " o isolanti."
+                    )
 
         # 4. Gestione Avanzata Mischie Lana/Acrilico
         elif self.lana > 0 or self.acrilico > 0:
@@ -87,12 +88,12 @@ class ScartoTessile:
 
         # 6. Blend Complessi (Es. Cotone-Poliestere equilibrati): Biotecnologie
         else:
-            return "🔵 Riciclo Enzimatico", (
-                "Il riciclo enzimatico usa biocatalizzatori che digeriscono selettivamente una fibra del blend, permettendo la "
-                "separazione anche dei mix più complessi senza solventi tossici e con basse temperature. È la tecnologia più avanzata"
-                "e sostenibile, ma oggi limitata dai costi elevati degli enzimi, gestita soprattutto da startup. "
-                )
-
+             return "🔴 Riciclo Meccanico", (
+                    "Il riciclo meccanico è una tecnologia consolidata ma degrada la fibra: le sfilacciatrici spezzano "
+                    "il tessuto in fibre corte che richiedono l’aggiunta di materiale vergine. È un processo a basso impatto "
+                    "ambientale, ma porta inevitabilmente al downcycling e a prodotti di qualità inferiore come imbottiture"
+                    " o isolanti."
+                    )
 
     # ======================================
     #           KPI AMBIENTALI
