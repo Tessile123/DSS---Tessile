@@ -183,7 +183,7 @@ presets = {
     "TripleBlend (Cotone + Poliestere + Elastan)": [60, 35, 5, 0, 0, 0], # Corretto: 5 valori
     "Lana e Acrilico": [0, 0, 0, 50, 50, 0],
     "Nylon ed Elastane": [0, 0, 15, 0, 0, 85],
-    "Altro (Manuale)": [20, 20, 10, 20, 15, 15]
+    "Altro (Manuale)": [0, 20, 0, 0, 80, 0]
 }
 
 nome_lotto = st.sidebar.selectbox("Seleziona il tipo di materiale", list(presets.keys()))
